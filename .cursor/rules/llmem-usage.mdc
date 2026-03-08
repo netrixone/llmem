@@ -1,0 +1,29 @@
+---
+description: Persistent memory across sessions via llmem MCP tools
+alwaysApply: true
+---
+
+# Memory Tools
+
+You have persistent memory via MCP tools (memory_context, memory_search, memory_relevant, etc.).
+Your context resets every session. These tools are your only continuity between conversations.
+
+## Session Start
+
+At the start of every conversation, BEFORE responding to the user's first message:
+1. Call `memory_context` with scope "llmem" to restore project-specific context
+2. Call `memory_relevant` with the user's first message to find related context
+3. Use retrieved memories to inform your response — don't mention this process unless asked
+
+## Mid-Conversation
+
+- Call `memory_relevant` when the user mentions a topic that might have stored context
+- Call `memory_search` when you need specific memories by content
+
+## Storing Knowledge
+
+- Use `memory_add` for new knowledge, decisions, preferences, project facts
+- Use `memory_update` to refresh existing memories (especially status)
+- Always set `type` (fact, decision, principle, status, thought, note)
+- Set `scopes: ["llmem"]` for project-specific memories
+- Prefix with hashtags for context restoration: #self, #goal, #status, #principle, #thought
